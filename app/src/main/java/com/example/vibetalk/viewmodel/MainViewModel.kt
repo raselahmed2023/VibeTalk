@@ -29,7 +29,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _messages = MutableStateFlow<List<ChatMessage>>(emptyList())
     val messages: StateFlow<List<ChatMessage>> = _messages
 
-    // Settings
     private val _autoSpeak = MutableStateFlow(true)
     val autoSpeak: StateFlow<Boolean> = _autoSpeak
 
@@ -67,30 +66,34 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun startRecording() {
-        audioFile = recorder.startRecording()
         _isRecording.value = true
         _statusText.value = "Listening..."
+
+        audioFile = recorder.startRecording {
+            // Auto stop called when silence detected
+            stopRecording()
+        }
     }
 
     fun stopRecording() {
+        if (!_isRecording.value) return
         recorder.stopRecording()
         _isRecording.value = false
         _statusText.value = "Thinking..."
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Step 1 — transcribe voice
-                val transcribed = audioFile?.let {
-                    GroqApiService.transcribeAudio(it)
-                } ?: return@launch
+                val pcmFile = recorder.getAudioFile()
 
-                // Add user message to chat
+                val transcribed = GroqApiService.transcribeAudio(pcmFile)
+
                 withContext(Dispatchers.Main) {
-                    addMessage(ChatMessage(transcribed, isUser = true, currentTime()))
-                    _statusText.value = "AI is thinking..."
+                    if (transcribed.isNotBlank()) {
+                        addMessage(ChatMessage(transcribed, isUser = true, currentTime()))
+                        _statusText.value = "AI is thinking..."
+                    }
                 }
 
-                // Step 2 — get AI reply
                 val reply = GroqApiService.getAIReply(transcribed)
 
                 withContext(Dispatchers.Main) {
@@ -101,6 +104,30 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }
 
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _statusText.value = "Error: ${e.message}"
+                }
+            }
+        }
+    }
+
+    fun sendTextMessage(text: String) {
+        if (text.isBlank()) return
+
+        addMessage(ChatMessage(text, isUser = true, currentTime()))
+        _statusText.value = "AI is thinking..."
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val reply = GroqApiService.getAIReply(text)
+                withContext(Dispatchers.Main) {
+                    addMessage(ChatMessage(reply, isUser = false, currentTime()))
+                    _statusText.value = "Tap mic to speak"
+                    if (_autoSpeak.value) {
+                        tts?.speak(reply, TextToSpeech.QUEUE_FLUSH, null, null)
+                    }
+                }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     _statusText.value = "Error: ${e.message}"
