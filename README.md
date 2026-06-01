@@ -1,12 +1,5 @@
 # 🎙️ VibeTalk — AI Voice Speaking Partner
 
-<p align="center">
-  <img src="app/src/main/res/drawable/ic_launcher_foreground.xml" width="120" alt="VibeTalk Logo"/>
-</p>
-
-<p align="center">
-  <b>Talk to AI. Get instant replies. Speak better every day.</b>
-</p>
 
 ---
 
@@ -128,6 +121,6 @@ MIT License — free to use and modify.
 
 ## 👨‍💻 Built By
 
-Built with ❤️ using **Claude AI** as a coding assistant.
+Built with using **Claude AI** as a coding assistant.
 
 
