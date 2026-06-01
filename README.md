@@ -1,8 +1,5 @@
 # 🎙️ VibeTalk — AI Voice Speaking Partner
 
-
----
-
 ## 📱 About
 
 VibeTalk is an Android AI voice chat app that lets you have real conversations with an AI assistant. Just tap the mic, speak naturally, and the AI replies back — both in text and voice.
