@@ -2,7 +2,7 @@
 
 ## 📱 About
 
-VibeTalk is an Android AI voice chat app that lets you have real conversations with an AI assistant. Just tap the mic, speak naturally, and the AI replies back — both in text and voice.
+VibeTalk is an Android AI voice chat app that lets you have real conversations with an AI assistant. Just tap the mic, speak naturally, and the AI replies back both in text and voice.
 
 Built with **Kotlin + Jetpack Compose** and powered by **Groq AI**.
 
@@ -67,7 +67,7 @@ Open in Android Studio → Click Run ▶️
 
 ## 🔑 API Key
 
-This app uses [Groq](https://console.groq.com) for both STT and AI — completely **free** to use.
+This app uses [Groq](https://console.groq.com) for both STT and AI , completely **free** to use.
 
 1. Go to [console.groq.com](https://console.groq.com)
 2. Sign up for free
@@ -112,7 +112,7 @@ Pull requests are welcome! For major changes, please open an issue first.
 
 ## 📄 License
 
-MIT License — free to use and modify.
+MIT License: free to use and modify.
 
 ---
 
